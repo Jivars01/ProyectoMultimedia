@@ -1,11 +1,10 @@
 package com.example.inicioactivity
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,9 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.inicioactivity.ui.theme.InicioActivityTheme
+import androidx.activity.compose.LocalActivity
 
 class FormularioActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +50,7 @@ class FormularioActivity : ComponentActivity() {
                     Formulario(
                         nombreInicial = nombreInicial,
                         apellidosInicial = apellidosInicial,
-                        contrasenaInicial = contrasenaInicial,
+                        contraseñaInicial = contrasenaInicial,
                         telefonoInicial = telefonoInicial,
                         correoInicial = correoInicial,
                         direccionInicial = direccionInicial,
@@ -65,25 +62,26 @@ class FormularioActivity : ComponentActivity() {
 }
 @Composable
 fun Formulario(
-    nombreInicial: String,
-    apellidosInicial: String,
-    contrasenaInicial: String,
-    telefonoInicial: String,
-    correoInicial: String,
-    direccionInicial: String,
-    fechaInicial: String
+    nombreInicial: String = "",
+    apellidosInicial: String = "",
+    contraseñaInicial: String = "",
+    telefonoInicial: String = "",
+    correoInicial: String = "",
+    direccionInicial: String = "",
+    fechaInicial: String = ""
 ) {
 
+    val activity = LocalActivity.current
 
 //El by se usa para acceder al valor sin tener que usar el .value ttodo el tiempo
     // El remember lo usamos para evitar que se reinicie la caja cada vez que escribimos en el
-    var name by remember { mutableStateOf("") } //El mutable lo usamos para que la variable puedo cambiar sin problema
-    var apellidos by remember { mutableStateOf("") }
-    var contraseña by remember { mutableStateOf("") }
-    var telefono by remember { mutableStateOf("") }
-    var correoElectronico by remember { mutableStateOf("") }
-    var direccion by remember { mutableStateOf("") }
-    var fechaNacimiento by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(nombreInicial) } //El mutable lo usamos para que la variable puedo cambiar sin problema
+    var apellidos by remember { mutableStateOf(apellidosInicial) }
+    var contraseña by remember { mutableStateOf(contraseñaInicial) }
+    var telefono by remember { mutableStateOf(telefonoInicial) }
+    var correoElectronico by remember { mutableStateOf(correoInicial) }
+    var direccion by remember { mutableStateOf(direccionInicial) }
+    var fechaNacimiento by remember { mutableStateOf(fechaInicial) }
 
     val context = LocalContext.current
     Column(
@@ -172,7 +170,7 @@ fun Formulario(
 
         Button(
             onClick = {
-                val intent = Intent(context, PerfilActivity::class.java).apply {
+                val resultIntent = Intent().apply {  //Cambio lo que teniamos hecho porque se crea la actividad nueva sino lo cambiamos
                     putExtra("EXTRA_NOMBRE", name.ifEmpty { "[Nombre]" })
                     putExtra("EXTRA_APELLIDOS", apellidos.ifEmpty { "[Apellidos]" })
                     putExtra("EXTRA_CONTRASENA", contraseña.ifEmpty { "[Contraseña]" })
@@ -181,7 +179,16 @@ fun Formulario(
                     putExtra("EXTRA_DIRECCION", direccion.ifEmpty { "[Dirección]" })
                     putExtra("EXTRA_FECHA", fechaNacimiento.ifEmpty { "[Fecha de Nacimiento]" })
                 }
-                context.startActivity(intent)
+
+                if (nombreInicial.isEmpty()) {
+                    resultIntent.setClass(activity!!, PerfilActivity::class.java)
+                    activity.startActivity(resultIntent)
+                    activity.finish()
+                } else {
+                    activity?.setResult(RESULT_OK, resultIntent)
+                    activity?.finish()
+                }
+
             },
             modifier = Modifier
                 .fillMaxWidth()
