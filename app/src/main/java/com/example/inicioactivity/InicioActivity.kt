@@ -41,22 +41,6 @@ class InicioActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Bienvenido $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    InicioActivityTheme {
-        Greeting("Android")
-    }
-}
-
     @Composable
     fun PantallaInicio(modifier: Modifier) {
         val context = LocalContext.current
@@ -82,15 +66,7 @@ fun GreetingPreview() {
                     context.startActivity(intent)
                 }
             ) {
-               /* Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "Icono Formulario",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp)
-                )
-                */
-                Text(text = "Ir al Formulario")
+                Text(text = "Clickea para entrar al Formulario")
             }
         }
     }
