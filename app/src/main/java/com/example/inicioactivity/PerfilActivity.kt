@@ -17,9 +17,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -121,7 +123,7 @@ fun PerfilPantalla(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable() {
-                    if (telefono != "[Teléfono]" && telefonoInicial.isNotEmpty()) {
+                    if (telefonoInicial != "[Teléfono]" && telefonoInicial.isNotEmpty()) {
                         val intentTelefono = Intent(Intent.ACTION_DIAL).apply {
                             data = Uri.parse("tel:$telefonoInicial")
                         }
@@ -144,7 +146,7 @@ fun PerfilPantalla(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    if (correo != "[Correo Electrónico]" && correoInicial.isNotEmpty()) {
+                    if (correoInicial != "[Correo Electrónico]" && correoInicial.isNotEmpty()) {
                         val intentCorreo = Intent(Intent.ACTION_SENDTO).apply {
                             data = Uri.parse("mailto:$correoInicial")
                         }
@@ -166,7 +168,7 @@ fun PerfilPantalla(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    if (direccion != "[Dirección]" && direccionInicial.isNotEmpty()) {
+                    if (direccionInicial != "[Dirección]" && direccionInicial.isNotEmpty()) {
                         val gmmIntentUri = Uri.parse("geo:0,0?q=${Uri.encode(direccionInicial)}")
                         val intentMapa = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                         context.startActivity(intentMapa)
@@ -201,6 +203,21 @@ fun PerfilPantalla(
                 .padding(top = 8.dp)
         ) {
             Text("Editar perfil")
+        }
+
+        OutlinedButton(
+            onClick = {
+                val intent = Intent(context, InicioActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                context.startActivity(intent)
+            },
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Cerrar Sesión")
         }
     }
 }
